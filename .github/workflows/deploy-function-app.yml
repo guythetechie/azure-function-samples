@@ -36,3 +36,26 @@ jobs:
             --name "${{ env.DEPLOYMENT_STACK_NAME }}" \
             --template-file "$TEMPLATE_FILE_PATH" \
             --yes
+      - name: Publish function app
+        env:
+          ZIP_FILE_PATH: ${{ runner.temp }}/function-app.zip
+        run: |
+          set -euo pipefail
+
+          echo "Creating zip file..."
+          zip -r "$ZIP_FILE_PATH" \
+            "${{ github.workspace }}/src/functionapp" \
+            -i '*functionapp/function_app.py' \
+            -i '*functionapp/host.json' \
+            -i '*functionapp/requirements.txt' \
+            -i '*functionapp/http_trigger.py' \
+            --junk-paths
+
+          echo "Publishing function app..."
+          DEPLOYMENT_STACK=$(az stack sub show -n "$DEPLOYMENT_STACK_NAME")
+          RESOURCE_GROUP_NAME=$(echo "$DEPLOYMENT_STACK" | jq -r '.outputs.resourceGroupName.value')
+          FUNCTION_APP_NAME=$(echo "$DEPLOYMENT_STACK" | jq -r '.outputs.functionAppName.value')
+          az functionapp deployment source config-zip \
+            --name "$FUNCTION_APP_NAME" \
+            --resource-group "$RESOURCE_GROUP_NAME" \
+            --src "$ZIP_FILE_PATH"
