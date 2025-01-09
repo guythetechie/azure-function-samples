@@ -35,5 +35,4 @@ jobs:
             --location "$AZURE_LOCATION" \
             --name "${{ env.DEPLOYMENT_STACK_NAME }}" \
             --template-file "$TEMPLATE_FILE_PATH" \
-            --parameters "$TEMPLATE_PARAMETER_FILE_PATH" \
             --yes
