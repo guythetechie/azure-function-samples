@@ -25,7 +25,6 @@ jobs:
           AZURE_LOCATION: eastus
           ACTION_ON_UNMANAGE: deleteAll
           TEMPLATE_FILE_PATH: "${{ github.workspace }}/bicep/main.bicep"
-          TEMPLATE_PARAMETER_FILE_PATH: "${{ github.workspace }}/bicep/main.bicepparam"
         run: |
           set -euo pipefail
 
