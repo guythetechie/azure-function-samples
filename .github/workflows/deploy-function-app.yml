@@ -1,0 +1,40 @@
+name: Deploy function app
+
+on: workflow_dispatch
+
+jobs:
+  deploy_function_app:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_STACK_NAME: "azure-function-samples"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Logon to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy Bicep file
+        shell: bash
+        env:
+          AZURE_LOCATION: eastus
+          ACTION_ON_UNMANAGE: deleteAll
+          TEMPLATE_FILE_PATH: "${{ github.workspace }}/bicep/main.bicep"
+          TEMPLATE_PARAMETER_FILE_PATH: "${{ github.workspace }}/bicep/main.bicepparam"
+        run: |
+          set -euo pipefail
+
+          echo "Creating deployment stack..."
+          az stack sub create \
+            --action-on-unmanage "$ACTION_ON_UNMANAGE" \
+            --deny-settings-mode none \
+            --location "$AZURE_LOCATION" \
+            --name "${{ env.DEPLOYMENT_STACK_NAME }}" \
+            --template-file "$TEMPLATE_FILE_PATH" \
+            --parameters "$TEMPLATE_PARAMETER_FILE_PATH" \
+            --yes
