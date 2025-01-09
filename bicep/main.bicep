@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-var prefix = 'function-app-samples-python'
+var prefix = 'function-app-samples'
 var resourceGroupName = '${prefix}-${take(uniqueString(subscription().id), 4)}-rg'
 var location = 'eastus2'
 var tags = {}
