@@ -223,8 +223,8 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         instanceMemoryMB: 2048
       }
       runtime: {
-        name: 'python'
-        version: '3.11'
+        name: 'powershell'
+        version: '7.4'
       }
     }
     siteConfig: {

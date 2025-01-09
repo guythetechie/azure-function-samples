@@ -7,7 +7,7 @@
             "installBicep": true
         },
         "ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/python:1": {}
+        "ghcr.io/devcontainers/features/powershell:1": {}
     },
     // Install Azure Functions Core Tools
     "postCreateCommand": "bash .devcontainer/install.sh",
